@@ -2,7 +2,7 @@ from tkinter import Tk, Canvas, NW, Toplevel, Text, Scrollbar, VERTICAL, filedia
 from tkinter.ttk import Frame, Label, Button
 from ciff import CIFF
 from os import listdir
-from os.path import join, extsep
+from os.path import join, extsep, dirname, abspath
 from PIL import Image, ImageTk
 
 
@@ -112,7 +112,7 @@ class Window(Frame):
         scrollbar.pack(side="right", fill="y")
         result_text.pack(side="left", fill="both", expand=True)
 
-        test_vectors_path = "test-vectors"
+        test_vectors_path = join(dirname(abspath(__file__)), "test-vectors")
         try:
             for test_vector in sorted(
                 [f for f in listdir(test_vectors_path)],
