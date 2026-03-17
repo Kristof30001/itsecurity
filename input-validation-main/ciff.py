@@ -311,17 +311,16 @@ class CIFF:
                 while bytes_read < new_ciff.header_size+new_ciff.content_size:
                     c = ciff_file.read(3)
                     # TODO: check if c contains 3 bytes
-                    #___
-                    #    ____
+                    if len(c) != 3:
+                        raise Exception("Invalid pixels: EOF")
                     bytes_read += 3
                     pixel = struct.unpack("BBB", c)
                     new_ciff.pixels.append(pixel)
 
                 # we should have reached the end of the file
                 # TODO: try to read a byte. If successful, raise Exception
-                #____
-                #____
-                #    ____
+                if len(ciff_file.read(1)) != 0:
+                    raise Exception("Invalid file: trailing bytes")
 
         except Exception:
             new_ciff.is_valid = False
