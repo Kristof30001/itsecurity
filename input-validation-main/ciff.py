@@ -238,29 +238,36 @@ class CIFF:
                 #    ____
 
                 # TODO: content size must equal width*height*3
-                #if ____:
-                #    ____
+                if new_ciff.content_size != new_ciff.width * new_ciff.height * 3:
+                    raise Exception("Invalid content size: does not match width*height*3")
 
                 # read the name of the image character by character
                 caption = ""
                 c = ciff_file.read(1)
-                # TODO: check if c contains 1 byte
-                #___
-                #    ____
+                if len(c) != 1:
+                    raise Exception("Invalid caption: EOF")
                 bytes_read += 1
-                char = c.decode('ascii')
+                try:
+                    char = c.decode('ascii')
+                except Exception:
+                    raise Exception("Invalid caption: non-ASCII")
                 # read until the first '\n' (caption cannot contain '\n')
                 while char != '\n':
                     # append read character to caption
                     caption += char
                     # read next character
                     c = ciff_file.read(1)
-                    # TODO: check if c contains 1 byte
-                    #___
-                    #    ____
+                    if len(c) != 1:
+                        raise Exception("Invalid caption: EOF")
                     bytes_read += 1
-                    char = c.decode('ascii')
+                    try:
+                        char = c.decode('ascii')
+                    except Exception:
+                        raise Exception("Invalid caption: non-ASCII")
                 new_ciff.caption = caption
+
+                if bytes_read > new_ciff.header_size:
+                    raise Exception("Invalid caption: exceeds header")
 
                 # read all the tags
                 tags = list()
@@ -272,11 +279,14 @@ class CIFF:
                     if len(c) != 1:
                         raise Exception("Invalid image")
                     bytes_read += 1
-                    char = c.decode('ascii')
+                    try:
+                        char = c.decode('ascii')
+                    except Exception:
+                        raise Exception("Invalid tags: non-ASCII")
                     # tags should not contain '\n'
                     # TODO: char must not be a '\n'
-                    #if ____ == ____:
-                    #    ____
+                    if char == '\n':
+                        raise Exception("Invalid tags: contains newline")
                     # tags are separated by terminating nulls
                     tag += char
                     if char == '\0':
@@ -284,14 +294,16 @@ class CIFF:
                         tag = ""
                     # the very last character in the header must be a '\0'
                     # TODO: check the last character of the header
-                    #if (bytes_read == ____) and ____:
-                    #    ____
+                    if (bytes_read == new_ciff.header_size) and char != '\0':
+                        raise Exception("Invalid tags: last character is not \\0")
 
                 # all tags must end with '\0'
                 # TODO: check the end of each tag for the '\0'
-                #for tag in tags:
-                #    if tag[____] != ____:
-                #        ____
+                if len(tags) == 0:
+                    raise Exception("Invalid tags: missing terminator")
+                for parsed_tag in tags:
+                    if parsed_tag[-1] != '\0':
+                        raise Exception("Invalid tags: tag does not end with \\0")
 
                 new_ciff.tags = tags
 
