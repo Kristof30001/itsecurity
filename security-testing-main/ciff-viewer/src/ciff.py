@@ -215,7 +215,9 @@ class CIFF:
                 # unpack returns a list
                 new_ciff.header_size = struct.unpack("Q", h_size)[0]
                 
-                #TODO: maybe something is missing here
+                # validate header_size is greater than the bytes already read
+                if new_ciff.header_size <= bytes_read:
+                    raise Exception("Invalid header size: too small")
 
                 # read the content size
                 c_size = ciff_file.read(8)
