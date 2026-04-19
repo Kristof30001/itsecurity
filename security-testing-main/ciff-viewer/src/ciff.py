@@ -298,7 +298,7 @@ class CIFF:
                 for tag in tags:
                     if tag[-1] != '\0':
                         raise Exception("Tag terminating character error")
-                new_ciff.tags = tag
+                new_ciff.tags = tags
 
                 # read the pixels
                 while bytes_read < new_ciff.header_size+new_ciff.content_size:
