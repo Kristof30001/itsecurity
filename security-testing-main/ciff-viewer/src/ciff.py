@@ -252,7 +252,9 @@ class CIFF:
                 if new_ciff.height < 0 or new_ciff.height > (2**64)-1:
                     raise Exception("Invalid hight value")
 
-                #TODO: maybe something is missing here
+                # validate content_size matches width * height * 3
+                if new_ciff.content_size != new_ciff.width * new_ciff.height * 3:
+                    raise Exception("Invalid content size: does not match width * height * 3")
 
                 # read the name of the image character by character
                 caption = ""
