@@ -1,0 +1,4 @@
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ nm -n app_32 | grep not_called
+08049196 T not_called
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ 
+
