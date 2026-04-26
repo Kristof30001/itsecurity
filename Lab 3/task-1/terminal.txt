@@ -2,3 +2,35 @@ yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ nm -n app_32 | grep not
 08049196 T not_called
 yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ 
 
+
+
+yami@DESKTOP-67OTB06:/mnt/d/Uyami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ g
+db ./app_32
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./app_32...
+(gdb) b vulnerable_function
+Breakpoint 1 at 0x80491da: file main.c, line 12.
+(gdb) run AAAA
+Starting program: /mnt/d/UBB/itsecurity/Lab 3/task-1/app_32 AAAA
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_[db.so](http://db.so).1".
+Breakpoint 1, vulnerable_function (string=0xffffce13 "AAAA") at main.c:12
+12          strcpy(buffer, string);
+(gdb) x/10xw $esp
+0xffffcbac:     0x00000001  0x00000001       0xf7fa9000  0xffffcbc8
+0xffffcbbc:     0x0804922b  0xffffce13       0xf7fa9000  0xf7ffd020
+0xffffcbcc:     0xf7da4519  0x00000002
+(gdb)
