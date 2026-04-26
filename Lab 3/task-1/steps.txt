@@ -1,0 +1,14 @@
+Igen, az előző válaszomban leírtak pontosan lefedik azt a négy konkrét kérdést, amit a feladatkiírás (a megadott instrukcióid alapján) megkövetel a beadáshoz. A feladatkiírás egyértelműen leszűkíti a beadandót a két feladat 2-2 kérdésére.
+
+Hogy a lehető legegyszerűbb legyen számodra a megoldás áttekintése és felhasználása, itt van egy letisztult, közvetlenül a beadandó szerkezetéhez igazított, végleges összefoglaló az első két feladathoz:
+
+1. Feladat: Buffer overflow bevezetés
+1. A kitűzött támadási cél milyen bemenet hatására érhető el?
+
+Bemenet: 12 bájtnyi tetszőleges karakter (pl. "AAAAAAAAAAAA"), majd közvetlenül utána a not_called függvény memóriacíme (little-endian, azaz fordított bájtsorrendben).
+
+Rövid magyarázat: A sebezhető függvényben a lokális változó (buffer) 8 bájt hosszú. A verem (stack) felépítése miatt ezután található a 4 bájtos elmentett keretmutató (saved EBP), majd az elmentett visszatérési cím (Return address). A 12 bájtnyi felesleges adattal pontosan felülírjuk a puffert és az elmentett EBP-t, a következő beírt adattal (a not_called címével) pedig sikeresen átírjuk az eredeti visszatérési címet, így a függvény visszatéréskor ide fog ugrani.
+
+2. A fordítási opció (make withSSP) milyen hatással van a támadásra?
+
+Hatás és magyarázat: A make withSSP parancs bekapcsolja a veremvédelmet (Stack-Smashing Protection, canary). A fordító egy véletlenszerű biztonsági értéket helyez el a lokális változók és az adminisztratív adatok (EBP, visszatérési cím) közé. A túlcsordítás során ez a "kanári" érték is felülírásra kerül. Mivel a program a visszatérés előtt ellenőrzi ezt az értéket, detektálja a módosítást és azonnal leáll, ezáltal sikeresen megvédi a programot a támadástól.

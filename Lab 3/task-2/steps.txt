@@ -1,0 +1,16 @@
+Igen, az előző válaszomban leírtak pontosan lefedik azt a négy konkrét kérdést, amit a feladatkiírás (a megadott instrukcióid alapján) megkövetel a beadáshoz. A feladatkiírás egyértelműen leszűkíti a beadandót a két feladat 2-2 kérdésére.
+
+Hogy a lehető legegyszerűbb legyen számodra a megoldás áttekintése és felhasználása, itt van egy letisztult, közvetlenül a beadandó szerkezetéhez igazított, végleges összefoglaló az első két feladathoz:
+
+2. Feladat: Buffer overflow paraméterekkel
+1. A kitűzött támadási cél milyen bemenet hatására érhető el?
+
+Bemenet: 12 bájtnyi tetszőleges karakter (padding) + a now_called függvény memóriacíme + 4 bájtnyi fiktív visszatérési cím (pl. "BBBB") + a paraméterként használni kívánt string memóriacíme (például a forráskódban lévő not_used változó /bin/sh stringjének címe).
+
+Rövid magyarázat: A cél nem csupán az ugrás, hanem egy valid hívási környezet szimulálása is. A hívott függvény a veremben úgy keresi a paramétereket, hogy azok a saját visszatérési címe "felett" helyezkednek el. Ezért a megcélzott függvény címe után be kell szúrni egy 4 bájtos fiktív visszatérési címet (hová térjen vissza a now_called), és csak ezután következhet a paraméterként átadott memóriacím.
+
+2. A fordítási opciók (make withASLR és make withASLRwithPIE) milyen hatással vannak a támadásra?
+
+make withASLR hatása: Bekapcsolja az operációs rendszer ASLR funkcióját, ami a memóriaterületeket véletlenszerűsíti, de az alkalmazás kódja (PIE) továbbra is fix címen marad. Mivel a függvény (now_called) és a fix string (/bin/sh) az adatszegmensekben fix memóriacímen találhatóak, a támadó ezen ismert címek alapján össze tudja rakni a payloadot. Így ez az opció önmagában nem véd a támadás ellen.
+
+make withASLRwithPIE hatása: Ez a beállítás az ASLR mellett a PIE (Position Independent Executable) funkciót is aktiválja. Ennek következtében immár maga a végrehajtható programkód és a benne lévő adatok (mint a célfüggvény és a string címe) is minden futtatáskor véletlenszerű memóriacímre kerülnek betöltésre. A támadó számára megjósolhatatlanná válnak a memóriacímek, így ez az opció sikeresen megvédi az alkalmazást a támadástól.
