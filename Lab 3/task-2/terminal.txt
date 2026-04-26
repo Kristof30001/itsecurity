@@ -1,0 +1,47 @@
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ gdb ./app_32
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./app_32...
+(gdb) print now_called
+$1 = {void (char *)} 0x8049196 <now_called>
+(gdb) print not_used
+$2 = 0x804a008 "/bin/sh"
+(gdb) print &not_used
+$3 = (char **) 0x804c024 <not_used>
+(gdb) x/s not_used
+0x804a008:      "/bin/sh"
+(gdb) 
+
+
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ ./app_32 $(python3 reachterm.py)
+Not quite a shell...
+$ ls
+app.d  app.o  app_32  main.c  makefile  reachterm.py  steps.txt  terminal.txt
+$ tree
+.
+├── app.d
+├── app.o
+├── app_32
+├── main.c
+├── makefile
+├── reachterm.py
+├── steps.txt
+└── terminal.txt
+
+1 directory, 8 files
+$ exit
+Segmentation fault (core dumped)
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ 
