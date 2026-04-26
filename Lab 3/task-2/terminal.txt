@@ -45,3 +45,32 @@ $ tree
 $ exit
 Segmentation fault (core dumped)
 yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ 
+
+
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ make clean
+rm -rf "app.o" "app.d" "app_32" "app_64"
+rm -rf shellcode BOFShellcode.bin shellcode.bin
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ make withASLR
+gcc -m32  -O0 -g3 -c -fmessage-length=0 -D_FORTIFY_SOURCE=0 -MMD -MP -MF"app.d" -MT"app.d" -o "app.o" "main.c" -mpreferred-stack-boundary=2 -mno-accumulate-outgoing-args -msse2 -fno-stack-protector
+gcc -m32  -mpreferred-stack-boundary=2 -mno-accumulate-outgoing-args -msse2 -o "app_32" "app.o"  -z execstack  -no-pie  -Wl,-z,relro
+sudo sysctl -w kernel.randomize_va_space=2
+kernel.randomize_va_space = 2
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ ./app_32 $(python3 reachterm.py)
+Not quite a shell...
+$ ls
+app.d   main.c        steps.txt
+app.o   makefile      terminal.txt
+app_32  reachterm.py
+$ exit
+Segmentation fault (core dumped)
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ make clean
+rm -rf "app.o" "app.d" "app_32" "app_64"
+rm -rf shellcode BOFShellcode.bin shellcode.bin
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ make withASLRwithPIE
+gcc -m32  -O0 -g3 -c -fmessage-length=0 -D_FORTIFY_SOURCE=0 -MMD -MP -MF"app.d" -MT"app.d" -o "app.o" "main.c" -mpreferred-stack-boundary=2 -mno-accumulate-outgoing-args -msse2 -fno-stack-protector
+gcc -m32  -mpreferred-stack-boundary=2 -mno-accumulate-outgoing-args -msse2 -o "app_32" "app.o"  -z execstack  -pie  -Wl,-z,relro
+sudo sysctl -w kernel.randomize_va_space=2
+kernel.randomize_va_space = 2
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ ./app_32 $(python3 reachterm.py)
+Segmentation fault (core dumped)
+yami@DESKTOP-67OTB06:/mnt/d/UBB/itsecurity/Lab 3/task-2$ 
